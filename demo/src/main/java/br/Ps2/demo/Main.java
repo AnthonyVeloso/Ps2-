@@ -1,5 +1,3 @@
-
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,33 +5,75 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class Main {
+
     public static void main(String[] args) throws Exception {
+
         Class.forName("org.postgresql.Driver");
-        String url = jdbc:postgresql://db.mdxdtohklaqwbhazssvi.supabase.co:5432/postgres?user=postgres&password=?
-        String username="postgres";
-        String password="rpzYWadTSFERbxO3";
+
+        String url = "jdbc:postgresql://db.mdxdtohklaqwbhazssvi.supabase.co:5432/postgres";
+        String username = "postgres";
+        String password = "rpzYWadTSFERbxO3";
+
         Connection con = DriverManager.getConnection(url, username, password);
 
         Statement stmt = con.createStatement();
 
-        //Consultando
-        ResultSet rs = stmt.executeQuery("SELECT * FROM LIVROS");
+        // 1️⃣ Inserir livro
+        String sqlLivro = "INSERT INTO Livro (titulo, autor) VALUES (?,?)";
 
-        while(rs.next()){
-            System.out.println(rs.getString("ID"));
+        PreparedStatement pstmtLivro = con.prepareStatement(sqlLivro);
+        pstmtLivro.setString(1, "Dom Casmurro");
+        pstmtLivro.setString(2, "Machado de Assis");
+
+        int qteLivro = pstmtLivro.executeUpdate();
+
+        if(qteLivro >= 1){
+            System.out.println("Livro inserido com sucesso");
         }
 
-        //inserindo
-        String sql_insert = "INSERT INTO PROPRIETARIOS (NOME, CPF) VALUES(?,?)";
+        // 2️⃣ Inserir empréstimo
+        String sqlEmprestimo = "INSERT INTO Emprestimo (livro_id, data_retirada) VALUES (?,?)";
 
-        PreparedStatement pstmt = con.prepareStatement(sql_insert);
+        PreparedStatement pstmtEmp = con.prepareStatement(sqlEmprestimo);
+        pstmtEmp.setInt(1, 1);
+        pstmtEmp.setDate(2, java.sql.Date.valueOf("2026-03-12"));
 
-        pstmt.setString(1,  "antonio");
-        pstmt.setString(2,"333333333-33");
+        int qteEmp = pstmtEmp.executeUpdate();
 
-        int qte = pstmt.executeUpdate();
-        if(qte >=1)
-            System.out.println("inserido com sucesso");
+        if(qteEmp >= 1){
+            System.out.println("Empréstimo registrado");
+        }
 
+        // 3️⃣ Listar livros
+        ResultSet rs = stmt.executeQuery("SELECT * FROM Livro");
+
+        System.out.println("\nLista de Livros:");
+
+        while(rs.next()){
+            System.out.println(
+                    rs.getInt("id") + " - " +
+                    rs.getString("titulo") + " - " +
+                    rs.getString("autor")
+            );
+        }
+
+        // 4️⃣ Listar empréstimos com JOIN
+        ResultSet rs2 = stmt.executeQuery(
+                "SELECT Livro.titulo, Emprestimo.data_retirada " +
+                "FROM Emprestimo " +
+                "JOIN Livro ON Livro.id = Emprestimo.livro_id"
+        );
+
+        System.out.println("\nEmpréstimos:");
+
+        while(rs2.next()){
+            System.out.println(
+                    rs2.getString("titulo") +
+                    " - " +
+                    rs2.getDate("data_retirada")
+            );
+        }
+
+        con.close();
     }
 }
