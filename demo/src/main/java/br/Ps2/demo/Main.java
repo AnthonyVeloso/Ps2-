@@ -18,8 +18,8 @@ public class Main {
 
         Statement stmt = con.createStatement();
 
-        // 1️⃣ Inserir livro
-        String sqlLivro = "INSERT INTO Livro (titulo, autor) VALUES (?,?)";
+        // Inserir livro
+        String sqlLivro = "INSERT INTO livro (titulo, autor) VALUES (?, ?)";
 
         PreparedStatement pstmtLivro = con.prepareStatement(sqlLivro);
         pstmtLivro.setString(1, "Dom Casmurro");
@@ -27,12 +27,12 @@ public class Main {
 
         int qteLivro = pstmtLivro.executeUpdate();
 
-        if(qteLivro >= 1){
+        if (qteLivro >= 1) {
             System.out.println("Livro inserido com sucesso");
         }
 
-        // 2️⃣ Inserir empréstimo
-        String sqlEmprestimo = "INSERT INTO Emprestimo (livro_id, data_retirada) VALUES (?,?)";
+        // Inserir empréstimo
+        String sqlEmprestimo = "INSERT INTO emprestimo (livro_id, data_retirada) VALUES (?, ?)";
 
         PreparedStatement pstmtEmp = con.prepareStatement(sqlEmprestimo);
         pstmtEmp.setInt(1, 1);
@@ -40,16 +40,16 @@ public class Main {
 
         int qteEmp = pstmtEmp.executeUpdate();
 
-        if(qteEmp >= 1){
+        if (qteEmp >= 1) {
             System.out.println("Empréstimo registrado");
         }
 
-        // 3️⃣ Listar livros
-        ResultSet rs = stmt.executeQuery("SELECT * FROM Livro");
+        // Listar livros
+        ResultSet rs = stmt.executeQuery("SELECT * FROM livro");
 
         System.out.println("\nLista de Livros:");
 
-        while(rs.next()){
+        while (rs.next()) {
             System.out.println(
                     rs.getInt("id") + " - " +
                     rs.getString("titulo") + " - " +
@@ -57,19 +57,18 @@ public class Main {
             );
         }
 
-        // 4️⃣ Listar empréstimos com JOIN
+        // Listar empréstimos com JOIN
         ResultSet rs2 = stmt.executeQuery(
-                "SELECT Livro.titulo, Emprestimo.data_retirada " +
-                "FROM Emprestimo " +
-                "JOIN Livro ON Livro.id = Emprestimo.livro_id"
+                "SELECT livro.titulo, emprestimo.data_retirada " +
+                "FROM emprestimo " +
+                "JOIN livro ON livro.id = emprestimo.livro_id"
         );
 
         System.out.println("\nEmpréstimos:");
 
-        while(rs2.next()){
+        while (rs2.next()) {
             System.out.println(
-                    rs2.getString("titulo") +
-                    " - " +
+                    rs2.getString("titulo") + " - " +
                     rs2.getDate("data_retirada")
             );
         }
