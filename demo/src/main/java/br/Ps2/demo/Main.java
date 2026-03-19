@@ -43,7 +43,7 @@ public class Main {
                         Livro novoLivro = new Livro(0, titulo, autor);
                         livroDAO.create(novoLivro);
 
-                        System.out.println("✅ Livro cadastrado com ID: " + novoLivro.getId());
+                        System.out.println(" Livro cadastrado com ID: " + novoLivro.getId());
                         break;
 
                     case 2:
@@ -53,9 +53,9 @@ public class Main {
                         Livro livro = livroDAO.read(idBusca);
 
                         if (livro != null) {
-                            System.out.println("📚 " + livro.getNome() + " - " + livro.getAutor());
+                            System.out.println(livro.getNome() + " - " + livro.getAutor());
                         } else {
-                            System.out.println("❌ Livro não encontrado");
+                            System.out.println(" Livro não encontrado");
                         }
                         break;
 
@@ -78,9 +78,9 @@ public class Main {
 
                             livroDAO.update(livroUpdate);
 
-                            System.out.println("✅ Livro atualizado!");
+                            System.out.println(" Livro atualizado!");
                         } else {
-                            System.out.println("❌ Livro não encontrado");
+                            System.out.println(" Livro não encontrado");
                         }
                         break;
 
@@ -90,7 +90,7 @@ public class Main {
 
                         livroDAO.delete(idDelete);
 
-                        System.out.println("🗑️ Livro deletado!");
+                        System.out.println(" Livro deletado!");
                         break;
 
                     case 5:
@@ -104,7 +104,7 @@ public class Main {
                         emprestimo emp = new emprestimo(idLivro, data);
                         emprestimoDAO.create(emp);
 
-                        System.out.println("📖 Empréstimo registrado!");
+                        System.out.println(" Empréstimo registrado!");
                         break;
 
                     case 0:
@@ -112,11 +112,11 @@ public class Main {
                         break;
 
                     default:
-                        System.out.println("❌ Opção inválida");
+                        System.out.println(" Opção inválida");
                 }
 
             } catch (Exception e) {
-                System.out.println("⚠️ Erro: " + e.getMessage());
+                System.out.println(" Erro: " + e.getMessage());
             }
 
         } while (opcao != 0);
