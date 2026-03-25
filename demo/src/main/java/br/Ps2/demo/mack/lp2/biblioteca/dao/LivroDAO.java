@@ -6,24 +6,22 @@ import java.sql.*;
 public class LivroDAO extends AbstractDAO {
 
     @Override
-    public Livro create(Object obj) throws SQLException {
-        Livro livro = (Livro) obj;
-        String sql = "INSERT INTO livro (titulo, autor) VALUES (?, ?)";
+public Livro create(Object obj) throws SQLException {
+    Livro livro = (Livro) obj;
+    // Alteramos o SQL para incluir o ID que vem do objeto
+    String sql = "INSERT INTO livro (id, titulo, autor) VALUES (?, ?, ?)";
 
-        try (Connection con = openConnection();
-             PreparedStatement stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+    try (Connection con = openConnection();
+         PreparedStatement stmt = con.prepareStatement(sql)) {
 
-            stmt.setString(1, livro.getNome());
-            stmt.setString(2, livro.getAutor());
-            stmt.executeUpdate();
-
-            ResultSet rs = stmt.getGeneratedKeys();
-            if (rs.next()) {
-                livro.setId(rs.getInt(1));
-            }
-        }
-        return livro;
+        stmt.setInt(1, livro.getId());      // Define o ID digitado pelo usuário
+        stmt.setString(2, livro.getNome());
+        stmt.setString(3, livro.getAutor());
+        
+        stmt.executeUpdate();
     }
+    return livro;
+}
 
     @Override
     public Livro read(int id) throws SQLException {
